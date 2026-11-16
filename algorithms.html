@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الخوارزميات | cntic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1b1f24;--mu:#5d6670;--bd:#dde1e6;--bar:#a9b4c0;--on:#2f67b1;--ok:#1a7f4b;--no:#b3261e;--c0:#2f67b1;--c1:#0f6e56;--c2:#534ab7;--c3:#993c1d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161a;--card:#1d2026;--tx:#eceef1;--mu:#9aa3ad;--bd:#2d323a;--bar:#4b5563;--on:#6fa0e6;--ok:#4cc38a;--no:#f2877f;--c0:#6fa0e6;--c1:#3fbf97;--c2:#9a93f0;--c3:#ee8f6d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14161a;--card:#1d2026;--tx:#eceef1;--mu:#9aa3ad;--bd:#2d323a;--bar:#4b5563;--on:#6fa0e6;--ok:#4cc38a;--no:#f2877f;--c0:#6fa0e6;--c1:#3fbf97;--c2:#9a93f0;--c3:#ee8f6d;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.7 "IBM Plex Sans Arabic",system-ui,sans-serif}
+.wrap{max-width:640px;margin:0 auto;padding:28px 16px 40px}
+h1{font-size:26px;font-weight:600;line-height:1.4;margin:0 0 6px}
+h2{font-size:20px;font-weight:600;line-height:1.4;margin:0 0 4px}
+.sub{color:var(--mu);font-size:15px;margin:0 0 16px}
+.tabs{display:flex;gap:8px;overflow-x:auto;margin:0 -16px 16px;padding:0 16px 8px;scrollbar-width:thin}
+.tb{all:unset;flex:none;min-width:96px;padding:8px 14px;border:1px solid var(--bd);border-radius:12px;background:var(--card);cursor:pointer;text-align:center;line-height:1.35;box-sizing:border-box}
+.tb b{display:block;font-size:14px;direction:ltr}
+.tb small{font-size:12px;color:var(--mu)}
+.tb[aria-selected=true]{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,var(--card))}
+.tb[aria-selected=true] small{color:var(--c)}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--c,var(--c0));outline-offset:2px}
+.viz{direction:ltr;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:30px 12px 34px}
+.bars{display:flex;align-items:flex-end;gap:4px;height:190px}
+.bar{position:relative;flex:1;min-width:0;background:var(--bar);border-radius:4px 4px 0 0;transition:height .25s,background .2s,opacity .2s}
+.bar span{position:absolute;top:-19px;left:0;right:0;text-align:center;font-size:12px;font-weight:600}
+.bar i{position:absolute;bottom:-21px;left:0;right:0;text-align:center;font-size:11px;font-style:normal;color:var(--mu)}
+.bar.rg{background:color-mix(in srgb,var(--on) 35%,var(--bar))}
+.bar.ok{background:var(--ok)}
+.bar.pv{background:var(--c)}
+.bar.on{background:var(--on)}
+.bar.no{background:var(--no)}
+.bar.dim{opacity:.3}
+.stats{display:flex;justify-content:space-between;gap:8px;margin:10px 0;font-size:14px;color:var(--mu)}
+.stats b{color:var(--tx);font-weight:600}
+.pl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.bt{all:unset;cursor:pointer;height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--c);color:var(--c);font:500 14px inherit;font-family:inherit;display:inline-flex;align-items:center;box-sizing:border-box}
+.bt.pri{background:var(--c);color:var(--card)}
+.bt[disabled]{opacity:.4;cursor:default}
+#sp,#tv{height:44px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);font:inherit;padding:0 10px}
+#tv{width:84px;direction:ltr;text-align:center}
+.log{min-height:3.4em;margin:0 0 14px;padding:10px 14px;background:var(--card);border:1px solid var(--bd);border-inline-start:4px solid var(--c);border-radius:8px;font-size:15px}
+.log b{color:var(--c);font-weight:600;margin-inline-end:6px;font-size:13px}
+.cx{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.cx div{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 4px;text-align:center;font-size:13px;color:var(--mu);line-height:1.5}
+.cx b{display:block;color:var(--tx);font:600 14px ui-monospace,Menlo,Consolas,monospace;direction:ltr}
+.nt{font-size:14px;color:var(--mu);margin:0 0 6px}
+.nt b{color:var(--tx);font-weight:600}
+details{margin-top:12px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:4px 14px}
+summary{cursor:pointer;padding:10px 0;font-weight:500;min-height:44px}
+pre{direction:ltr;text-align:left;overflow-x:auto;margin:0 0 12px;font:13px/1.6 ui-monospace,Menlo,Consolas,monospace;color:var(--tx)}
+.sec{margin-top:36px}
+.rc{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-top:12px}
+.rr{display:grid;grid-template-columns:96px 1fr;gap:4px 10px;align-items:center;margin-bottom:12px;font-size:14px}
+.rr:last-child{margin-bottom:0}
+.rr>b{direction:ltr;text-align:start;font-weight:600;grid-row:span 2}
+.rb{display:flex;align-items:center;gap:8px;direction:ltr;min-height:18px}
+.rb i{display:block;height:10px;border-radius:5px;background:var(--on);min-width:2px;transition:width .4s}
+.rb.m i{background:var(--no)}
+.rb em{font-style:normal;font-size:12px;color:var(--mu);font-family:ui-monospace,Menlo,Consolas,monospace}
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:12px;background:var(--card);margin-top:12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--bd);white-space:nowrap}
+th{color:var(--mu);font-weight:500}
+td:first-child,th:first-child{text-align:start;font-weight:600;position:sticky;inset-inline-start:0;background:var(--card)}
+td{font-family:ui-monospace,Menlo,Consolas,monospace;direction:ltr}
+tr:last-child td{border-bottom:0}
+.lg{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--mu);margin:0 0 8px}
+.lg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;background:var(--k)}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--bd);text-align:center;color:var(--mu);font-size:14px}
+footer bdi{font-weight:600;color:var(--tx)}
+@media (prefers-reduced-motion:reduce){.bar,.rb i{transition:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<h1>الخوارزميات</h1>
+<p class="sub">شاهد كل خوارزمية وهي تعمل خطوة بخطوة، وتحكّم بالسرعة وارجع للخلف متى شئت.</p>
+<div class="tabs" role="tablist" id="tabs" aria-label="الخوارزميات"></div>
+<section id="pn">
+<h2 id="tt"></h2>
+<p class="sub" id="ds"></p>
+<div class="lg" aria-hidden="true"><span style="--k:var(--on)">مقارنة</span><span style="--k:var(--no)">تبديل</span><span style="--k:var(--c)">محور / وسط</span><span style="--k:var(--ok)">مكتمل</span></div>
+<div class="viz" id="vz" role="img" aria-label="تمثيل مرئي للأعمدة"></div>
+<div class="stats"><span>الخطوة <b id="sk"></b></span><span>المقارنات <b id="sc"></b></span><span id="svw">الحركات <b id="sv"></b></span></div>
+<div class="pl">
+<button class="bt" id="b0" aria-label="العودة للبداية">⏮</button>
+<button class="bt" id="b1" aria-label="الخطوة السابقة">السابق</button>
+<button class="bt pri" id="pl">تشغيل</button>
+<button class="bt" id="b2" aria-label="الخطوة التالية">التالي</button>
+<select id="sp" aria-label="السرعة"><option value="1000">بطيء</option><option value="550" selected>متوسط</option><option value="220">سريع</option><option value="60">فائق</option></select>
+</div>
+<div class="pl"><button class="bt" id="nw">مصفوفة جديدة</button><span id="sr" hidden><input id="tv" inputmode="numeric" maxlength="2" aria-label="القيمة المطلوبة"> <button class="bt pri" id="go">ابحث</button></span></div>
+<p class="log" id="lgm" role="status" aria-live="polite"></p>
+<div class="cx" id="cx"></div>
+<p class="nt" id="cn"></p>
+<p class="nt" id="an"></p>
+<details><summary>عرض الكود (JavaScript)</summary><pre><code id="cd"></code></pre></details>
+</section>
+<div class="sec">
+<h2>سباق الخوارزميات</h2>
+<p class="sub">تُفرز نفس المصفوفة العشوائية بكل خوارزمية ونقارن عدد المقارنات والحركات (تبديلات، وكتابات في فرز الدمج).</p>
+<div class="pl"><select id="rn" aria-label="حجم المصفوفة"><option value="10">10 عناصر</option><option value="30" selected>30 عنصرًا</option><option value="60">60 عنصرًا</option></select><button class="bt pri" id="rg" style="--c:var(--c0)">شغّل المقارنة</button></div>
+<div class="lg" aria-hidden="true"><span style="--k:var(--on)">مقارنات</span><span style="--k:var(--no)">حركات</span></div>
+<div class="rc" id="rc"><p class="sub" style="margin:0">اضغط «شغّل المقارنة» لترى النتائج.</p></div>
+<div class="tw"><table id="cmp"></table></div>
+</div>
+<footer>صنع بواسطة <bdi dir="ltr">cntic</bdi></footer>
+</main>
+<script>
+const $=i=>document.getElementById(i);
+const R=(a,b)=>Array.from({length:Math.max(0,b-a)},(_,i)=>a+i);
+const mk=a=>{const fr=[];let c=0,v=0;return{fr:fr,P:(h,m)=>fr.push({a:a.slice(),h:h,m:m,c:c,v:v}),c:()=>c++,v:n=>{v+=n===undefined?1:n}}};
+function bubble(a){const n=a.length,t=mk(a),P=t.P;P({},"المصفوفة قبل الفرز.");
+for(let i=0;i<n-1;i++){let sw=false;
+for(let j=0;j<n-1-i;j++){t.c();const big=a[j]>a[j+1];P({on:[j,j+1],ok:R(n-i,n)},"قارنّا "+a[j]+" مع "+a[j+1]+(big?": الأول أكبر فنبدّلهما.":": الترتيب صحيح."));
+if(big){[a[j],a[j+1]]=[a[j+1],a[j]];t.v();sw=true;P({no:[j,j+1],ok:R(n-i,n)},"تم التبديل.")}}
+if(!sw){P({ok:R(0,n)},"لم يحدث أي تبديل في هذه الجولة: المصفوفة مرتبة، نتوقف مبكرًا.");return t.fr}
+P({ok:R(n-1-i,n)},"انتهت الجولة "+(i+1)+": "+a[n-1-i]+" استقر في مكانه.")}
+P({ok:R(0,n)},"انتهى الفرز.");return t.fr}
+function selection(a){const n=a.length,t=mk(a),P=t.P;P({},"المصفوفة قبل الفرز.");
+for(let i=0;i<n-1;i++){let m=i;P({pv:[m],ok:R(0,i)},"الجولة "+(i+1)+": نبحث عن أصغر قيمة من الفهرس "+i+" إلى النهاية.");
+for(let j=i+1;j<n;j++){t.c();const s=a[j]<a[m];P({on:[j],pv:[m],ok:R(0,i)},"قارنّا "+a[j]+" مع الأصغر الحالي "+a[m]+(s?": أصغر، نحدّث الأصغر.":": ليس أصغر."));if(s)m=j}
+if(m!==i){[a[i],a[m]]=[a[m],a[i]];t.v();P({no:[i,m],ok:R(0,i)},"بدّلنا الأصغر "+a[i]+" مع العنصر في الفهرس "+m+".")}
+P({ok:R(0,i+1)},a[i]+" استقر في مكانه.")}
+P({ok:R(0,n)},"انتهى الفرز.");return t.fr}
+function insertion(a){const n=a.length,t=mk(a),P=t.P;P({ok:[0]},"العنصر الأول وحده مرتب.");
+for(let i=1;i<n;i++){P({pv:[i],ok:R(0,i)},"نأخذ "+a[i]+" ونُدخله في مكانه ضمن الجزء المرتب.");let j=i;
+while(j>0){t.c();const s=a[j-1]>a[j];P({on:[j-1,j],ok:R(0,i+1)},"قارنّا "+a[j-1]+" مع "+a[j]+(s?": الأيسر أكبر فنبدّل.":": مكانه صحيح."));if(!s)break;[a[j-1],a[j]]=[a[j],a[j-1]];t.v();P({no:[j-1,j],ok:R(0,i+1)},"تم التبديل.");j--}
+P({ok:R(0,i+1)},"استقر "+a[j]+" في مكانه.")}
+P({ok:R(0,n)},"انتهى الفرز.");return t.fr}
+function merge(a){const n=a.length,t=mk(a),P=t.P;P({},"المصفوفة قبل الفرز.");
+(function ms(lo,hi){if(lo>=hi)return;const mid=(lo+hi)>>1;ms(lo,mid);ms(mid+1,hi);let i=lo,j=mid+1;const x=[];
+P({rg:R(lo,hi+1)},"ندمج الجزء ["+lo+".."+mid+"] مع الجزء ["+(mid+1)+".."+hi+"].");
+while(i<=mid&&j<=hi){t.c();const l=a[i]<=a[j];P({rg:R(lo,hi+1),on:[i,j]},"قارنّا "+a[i]+" (من اليسار) مع "+a[j]+" (من اليمين): نأخذ "+(l?a[i]:a[j])+".");x.push(l?a[i++]:a[j++])}
+while(i<=mid)x.push(a[i++]);while(j<=hi)x.push(a[j++]);
+x.forEach((y,k)=>a[lo+k]=y);t.v(x.length);P({ok:R(lo,hi+1)},"كُتب الجزء المدموج مرتبًا: "+x.join(" ، "))})(0,n-1);
+P({ok:R(0,n)},"انتهى الفرز.");return t.fr}
+function quick(a){const n=a.length,t=mk(a),P=t.P,done=new Set();P({},"المصفوفة قبل الفرز.");
+(function qs(lo,hi){if(lo>hi)return;if(lo===hi){done.add(lo);P({ok:[...done]},"العنصر "+a[lo]+" وحده، فهو في مكانه.");return}
+const p=a[hi],g=R(lo,hi+1);P({pv:[hi],rg:g,ok:[...done]},"المحور = "+p+" (آخر عنصر في المجال ["+lo+".."+hi+"]).");let i=lo;
+for(let j=lo;j<hi;j++){t.c();const s=a[j]<p;P({on:[j],pv:[hi],rg:g,ok:[...done]},"قارنّا "+a[j]+" مع المحور "+p+(s?": أصغر، يذهب للجهة اليسرى.":": أكبر، يبقى في الجهة اليمنى."));
+if(s){if(i!==j){[a[i],a[j]]=[a[j],a[i]];t.v();P({no:[i,j],pv:[hi],rg:g,ok:[...done]},"تبديل "+a[j]+" مع "+a[i]+".")}i++}}
+if(i!==hi){[a[i],a[hi]]=[a[hi],a[i]];t.v()}
+done.add(i);P({no:i!==hi?[i,hi]:[],ok:[...done]},"وُضع المحور "+p+" في مكانه النهائي (الفهرس "+i+").");qs(lo,i-1);qs(i+1,hi)})(0,n-1);
+P({ok:R(0,n)},"انتهى الفرز.");return t.fr}
+function linear(a,x){const n=a.length,t=mk(a),P=t.P;P({},"نبحث عن "+x+" من البداية.");
+for(let i=0;i<n;i++){t.c();if(a[i]===x){P({ok:[i]},"a["+i+"] = "+a[i]+" يساوي "+x+": وجدناه! عدد المقارنات: "+(i+1)+".");return t.fr}P({on:[i]},"a["+i+"] = "+a[i]+" لا يساوي "+x+": ننتقل للتالي.")}
+P({},"فُحصت كل العناصر: "+x+" غير موجود.");return t.fr}
+function binary(a,x){const n=a.length,t=mk(a),P=t.P;P({},"المصفوفة مرتبة. نبحث عن "+x+".");let lo=0,hi=n-1,cc=0;
+while(lo<=hi){const m=(lo+hi)>>1,dim=R(0,lo).concat(R(hi+1,n));t.c();cc++;
+if(a[m]===x){P({ok:[m],dim:dim},"الوسط a["+m+"] = "+a[m]+" يساوي "+x+": وجدناه! عدد المقارنات: "+cc+".");return t.fr}
+const g=a[m]<x;P({pv:[m],rg:R(lo,hi+1),dim:dim},"المجال ["+lo+".."+hi+"]، الوسط "+a[m]+(g?" أصغر من "+x+": نهمل النصف الأيسر.":" أكبر من "+x+": نهمل النصف الأيمن."));if(g)lo=m+1;else hi=m-1}
+P({dim:R(0,n)},"انتهى المجال: "+x+" غير موجود.");return t.fr}
+const L=["الأفضل","المتوسط","الأسوأ","الذاكرة"];
+const ALG=[
+{id:"bubble",n:"Bubble Sort",a:"فرز الفقاعات",c:"c0",s:1,g:bubble,d:"تقارن كل عنصرين متجاورين وتبدّلهما إن كانا بترتيب خاطئ، فيطفو الأكبر إلى النهاية في كل جولة كفقاعة.",an:"مثل ترتيب صف من الطلاب بالطول بتبديل كل اثنين متجاورين.",cx:["O(n)","O(n²)","O(n²)","O(1)"],nt:"بسيطة لكنها بطيئة. تتوقف مبكرًا إذا لم يحدث تبديل في جولة، وهذا هو الأفضل O(n).",
+code:`function bubbleSort(a) {
+  for (let i = 0; i < a.length - 1; i++) {
+    let swapped = false;
+    for (let j = 0; j < a.length - 1 - i; j++) {
+      if (a[j] > a[j + 1]) {
+        [a[j], a[j + 1]] = [a[j + 1], a[j]];
+        swapped = true;
+      }
+    }
+    if (!swapped) break;
+  }
+  return a;
+}`},
+{id:"selection",n:"Selection Sort",a:"فرز الاختيار",c:"c1",s:1,g:selection,d:"في كل جولة تختار أصغر عنصر في الجزء غير المرتب وتضعه في مكانه.",an:"مثل اختيار أقصر شخص ووضعه في أول الصف، ثم تكرار ذلك مع الباقين.",cx:["O(n²)","O(n²)","O(n²)","O(1)"],nt:"تبديلاتها قليلة (n على الأكثر)، لكن مقارناتها كثيرة دائمًا حتى لو كانت المصفوفة مرتبة.",
+code:`function selectionSort(a) {
+  for (let i = 0; i < a.length - 1; i++) {
+    let min = i;
+    for (let j = i + 1; j < a.length; j++) {
+      if (a[j] < a[min]) min = j;
+    }
+    if (min !== i) [a[i], a[min]] = [a[min], a[i]];
+  }
+  return a;
+}`},
+{id:"insertion",n:"Insertion Sort",a:"فرز الإدراج",c:"c2",s:1,g:insertion,d:"تبني جزءًا مرتبًا من اليسار، وتُدخل كل عنصر جديد في مكانه الصحيح داخله.",an:"مثل ترتيب أوراق اللعب في يدك واحدة بعد أخرى.",cx:["O(n)","O(n²)","O(n²)","O(1)"],nt:"ممتازة مع البيانات شبه المرتبة ومع المصفوفات الصغيرة.",
+code:`function insertionSort(a) {
+  for (let i = 1; i < a.length; i++) {
+    let j = i;
+    while (j > 0 && a[j - 1] > a[j]) {
+      [a[j - 1], a[j]] = [a[j], a[j - 1]];
+      j--;
+    }
+  }
+  return a;
+}`},
+{id:"merge",n:"Merge Sort",a:"فرز الدمج",c:"c3",s:1,g:merge,d:"تقسم المصفوفة إلى نصفين، تفرز كلًا منهما، ثم تدمجهما بمقارنة أول عنصرين من كل جزء (فرّق تسُد).",an:"مثل دمج كومتين مرتبتين من البطاقات في كومة واحدة.",cx:["O(n log n)","O(n log n)","O(n log n)","O(n)"],nt:"أداؤها ثابت دائمًا، لكنها تحتاج ذاكرة إضافية O(n). وهي خوارزمية مستقرة.",
+code:`function mergeSort(a) {
+  if (a.length < 2) return a;
+  const mid = a.length >> 1;
+  const l = mergeSort(a.slice(0, mid));
+  const r = mergeSort(a.slice(mid));
+  const out = [];
+  let i = 0, j = 0;
+  while (i < l.length && j < r.length)
+    out.push(l[i] <= r[j] ? l[i++] : r[j++]);
+  return out.concat(l.slice(i), r.slice(j));
+}`},
+{id:"quick",n:"Quick Sort",a:"الفرز السريع",c:"c0",s:1,g:quick,d:"تختار محورًا وتقسم العناصر إلى أصغر منه وأكبر منه، ثم تكرر الأمر على الجزأين.",an:"مثل تقسيم الناس إلى أقصر وأطول من شخص مختار، ثم ترتيب كل مجموعة على حدة.",cx:["O(n log n)","O(n log n)","O(n²)","O(log n)"],nt:"الأسرع غالبًا في الواقع. تسوء إذا كان المحور سيئًا دائمًا، مثل اختيار آخر عنصر في مصفوفة مرتبة.",
+code:`function quickSort(a, lo = 0, hi = a.length - 1) {
+  if (lo >= hi) return a;
+  const pivot = a[hi];
+  let i = lo;
+  for (let j = lo; j < hi; j++) {
+    if (a[j] < pivot) {
+      [a[i], a[j]] = [a[j], a[i]];
+      i++;
+    }
+  }
+  [a[i], a[hi]] = [a[hi], a[i]];
+  quickSort(a, lo, i - 1);
+  quickSort(a, i + 1, hi);
+  return a;
+}`},
+{id:"linear",n:"Linear Search",a:"بحث خطي",c:"c1",s:0,g:linear,d:"تفحص العناصر واحدًا واحدًا من البداية حتى تجد القيمة أو تنتهي المصفوفة.",an:"مثل البحث عن اسم في قائمة غير مرتبة بقراءتها كلها.",cx:["O(1)","O(n)","O(n)","O(1)"],nt:"تعمل على أي مصفوفة، مرتبة أو غير مرتبة.",
+code:`function linearSearch(a, x) {
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] === x) return i;
+  }
+  return -1;
+}`},
+{id:"binary",n:"Binary Search",a:"بحث ثنائي",c:"c2",s:0,g:binary,d:"تعمل على مصفوفة مرتبة فقط: تقارن بالعنصر الأوسط وتهمل نصف المجال في كل خطوة.",an:"مثل البحث عن كلمة في قاموس بفتحه من المنتصف.",cx:["O(1)","O(log n)","O(log n)","O(1)"],nt:"12 عنصرًا تحتاج 4 مقارنات على الأكثر، ومليون عنصر تحتاج نحو 20 فقط.",
+code:`function binarySearch(a, x) {
+  let lo = 0, hi = a.length - 1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (a[mid] === x) return mid;
+    if (a[mid] < x) lo = mid + 1;
+    else hi = mid - 1;
+  }
+  return -1;
+}`}];
+const rnd=n=>{const s=new Set();while(s.size<n)s.add(5+Math.floor(Math.random()*95));return[...s]};
+let BASE=rnd(12),TG=BASE[3],cur=ALG[0],fr=[],k=0,tm=null;
+const spd=()=>window.ASP!==undefined?window.ASP:+$("sp").value;
+const cls=(h,i)=>h.no&&h.no.includes(i)?"no":h.on&&h.on.includes(i)?"on":h.pv&&h.pv.includes(i)?"pv":h.ok&&h.ok.includes(i)?"ok":h.dim&&h.dim.includes(i)?"dim":h.rg&&h.rg.includes(i)?"rg":"";
+function stop(){clearTimeout(tm);tm=null;$("pl").textContent=k>=fr.length-1&&fr.length>1?"إعادة":"تشغيل"}
+function show(){
+const f=fr[k];
+$("vz").innerHTML='<div class="bars">'+f.a.map((v,i)=>'<div class="bar '+cls(f.h,i)+'" style="height:'+Math.max(v,6)+'%"><span>'+v+'</span><i>'+i+'</i></div>').join("")+'</div>';
+$("sk").textContent=(k+1)+" من "+fr.length;$("sc").textContent=f.c;$("sv").textContent=f.v;
+$("lgm").textContent=f.m;
+$("b0").disabled=$("b1").disabled=k===0;$("b2").disabled=k>=fr.length-1;
+}
+function load(){
+stop();k=0;
+fr=cur.s?cur.g(BASE.slice()):cur.g(cur.id==="binary"?BASE.slice().sort((x,y)=>x-y):BASE.slice(),TG);
+$("pl").textContent="تشغيل";show();
+}
+function start(){if(tm){stop();return}if(k>=fr.length-1){k=0;show()}$("pl").textContent="إيقاف";tm=setTimeout(tick,spd())}
+function tick(){if(k>=fr.length-1){stop();return}k++;show();if(k>=fr.length-1){stop();return}tm=setTimeout(tick,spd())}
+function pick(a){
+stop();cur=a;
+document.querySelectorAll(".tb").forEach(b=>b.setAttribute("aria-selected",b.dataset.id===a.id));
+$("pn").style.setProperty("--c","var(--"+a.c+")");
+$("tt").innerHTML=a.a+' <span dir="ltr" style="color:var(--mu);font-weight:400;font-size:16px">'+a.n+'</span>';
+$("ds").textContent=a.d;
+$("sr").hidden=!!a.s;$("svw").hidden=!a.s;$("tv").value=TG;
+$("cx").innerHTML=L.map((l,i)=>'<div>'+l+'<b>'+a.cx[i]+'</b></div>').join("");
+$("cn").innerHTML="<b>ملاحظة:</b> "+a.nt;$("an").innerHTML="<b>تشبيه:</b> "+a.an;
+$("cd").textContent=a.code;
+load();
+}
+$("tabs").innerHTML=ALG.map(a=>'<button class="tb" role="tab" data-id="'+a.id+'" style="--c:var(--'+a.c+')"><b>'+a.n+'</b><small>'+a.a+'</small></button>').join("");
+$("tabs").onclick=e=>{const b=e.target.closest(".tb");if(b)pick(ALG.find(a=>a.id===b.dataset.id))};
+$("pl").onclick=start;
+$("b0").onclick=()=>{stop();k=0;show()};
+$("b1").onclick=()=>{stop();if(k>0){k--;show()}};
+$("b2").onclick=()=>{stop();if(k<fr.length-1){k++;show();stop()}};
+$("nw").onclick=()=>{BASE=rnd(12);TG=BASE[Math.floor(Math.random()*12)];$("tv").value=TG;load()};
+function go(){const v=parseInt($("tv").value,10);if(!(v>=0&&v<=99)){$("lgm").textContent="أدخل رقمًا صحيحًا من 0 إلى 99.";$("tv").focus();return}TG=v;load();start()}
+$("go").onclick=go;$("tv").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go()}};
+const RACE=ALG.filter(a=>a.s);
+$("rg").onclick=()=>{
+const a=rnd(+$("rn").value),res=RACE.map(x=>{const f=x.g(a.slice()),l=f[f.length-1];return{n:x.n,c:l.c,v:l.v}});
+const mc=Math.max(...res.map(r=>r.c),1),mv=Math.max(...res.map(r=>r.v),1);
+$("rc").innerHTML=res.map(r=>'<div class="rr"><b>'+r.n+'</b><div class="rb"><i style="width:'+Math.max(r.c/mc*100,1)+'%"></i><em>'+r.c+'</em></div><div class="rb m"><i style="width:'+Math.max(r.v/mv*100,1)+'%"></i><em>'+r.v+'</em></div></div>').join("");
+};
+$("cmp").innerHTML='<tr><th>الخوارزمية</th>'+L.map(l=>'<th>'+l+'</th>').join("")+'</tr>'+ALG.map(a=>'<tr><td>'+a.a+'</td>'+a.cx.map(c=>'<td>'+c+'</td>').join("")+'</tr>').join("");
+pick(ALG[0]);
+</script>
+</body>
+</html>

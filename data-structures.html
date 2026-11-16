@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>هياكل البيانات | cntic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1b1f24;--mu:#5d6670;--bd:#dde1e6;--on:#2f67b1;--ok:#1a7f4b;--no:#b3261e;--c0:#2f67b1;--c1:#0f6e56;--c2:#534ab7;--c3:#993c1d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161a;--card:#1d2026;--tx:#eceef1;--mu:#9aa3ad;--bd:#2d323a;--on:#6fa0e6;--ok:#4cc38a;--no:#f2877f;--c0:#6fa0e6;--c1:#3fbf97;--c2:#9a93f0;--c3:#ee8f6d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14161a;--card:#1d2026;--tx:#eceef1;--mu:#9aa3ad;--bd:#2d323a;--on:#6fa0e6;--ok:#4cc38a;--no:#f2877f;--c0:#6fa0e6;--c1:#3fbf97;--c2:#9a93f0;--c3:#ee8f6d;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.7 "IBM Plex Sans Arabic",system-ui,sans-serif}
+.wrap{max-width:640px;margin:0 auto;padding:28px 16px 40px}
+h1{font-size:26px;font-weight:600;line-height:1.4;margin:0 0 6px}
+h2{font-size:20px;font-weight:600;line-height:1.4;margin:0 0 4px}
+.sub{color:var(--mu);font-size:15px;margin:0 0 16px}
+.tabs{display:flex;gap:8px;overflow-x:auto;margin:0 -16px 16px;padding:0 16px 8px;scrollbar-width:thin}
+.tb{all:unset;flex:none;min-width:92px;padding:8px 14px;border:1px solid var(--bd);border-radius:12px;background:var(--card);cursor:pointer;text-align:center;line-height:1.35;box-sizing:border-box}
+.tb b{display:block;font-size:14px;direction:ltr}
+.tb small{font-size:12px;color:var(--mu)}
+.tb[aria-selected=true]{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,var(--card))}
+.tb[aria-selected=true] small{color:var(--c)}
+.tb:focus-visible,.op:focus-visible,#iv:focus-visible,#sv:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.viz{direction:ltr;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px 12px;min-height:170px;overflow-x:auto;display:flex}
+.inn{margin:auto}
+.row{display:flex;align-items:center;gap:6px;padding:22px 0 24px}
+.col{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cell{position:relative;min-width:48px;height:48px;padding:0 6px;border:2px solid var(--bd);border-radius:8px;display:grid;place-items:center;font-weight:600;background:var(--card);transition:background .25s,border-color .25s}
+.cell i{position:absolute;bottom:-23px;font-size:12px;font-style:normal;color:var(--mu);font-weight:400}
+.cell em{position:absolute;top:-22px;font-size:11px;font-style:normal;color:var(--mu);font-weight:500;white-space:nowrap}
+.cell.wide{min-width:120px}
+.cell.on,.sn.on circle{border-color:var(--on);stroke:var(--on);background:color-mix(in srgb,var(--on) 16%,var(--card))}
+.cell.ok,.sn.ok circle{border-color:var(--ok);stroke:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--card))}
+.cell.no,.sn.no circle{border-color:var(--no);stroke:var(--no);background:color-mix(in srgb,var(--no) 16%,var(--card))}
+.ar,.nil,.tagp{color:var(--mu);font-size:14px;white-space:nowrap}
+.tagp{font-weight:600;font-size:12px;color:var(--c)}
+.srow{display:flex;align-items:center;gap:8px}
+.base{width:140px;height:4px;border-radius:2px;background:var(--mu)}
+.hr{display:flex;align-items:center;gap:5px;margin:3px 0}
+.hr .cell{height:34px;min-width:38px;font-size:14px}
+.hr .hid{background:color-mix(in srgb,var(--c) 10%,var(--card));min-width:30px}
+.empty{color:var(--mu);font-size:14px}
+svg{display:block;margin:auto}
+.sn circle{fill:var(--card);stroke:var(--bd);stroke-width:2;transition:fill .25s,stroke .25s}
+.sn text{fill:var(--tx);font-size:13px;font-weight:600;font-family:inherit}
+svg line{stroke:var(--bd);stroke-width:2}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 10px;align-items:center}
+#iv,#sv{height:44px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);font:inherit;padding:0 12px;width:120px;direction:ltr;text-align:center}
+.op{all:unset;cursor:pointer;height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--c);color:var(--c);font:500 14px ui-monospace,Menlo,Consolas,monospace;display:inline-flex;align-items:center;box-sizing:border-box;direction:ltr}
+.op:first-child{background:var(--c);color:var(--card)}
+.op[disabled],#iv[disabled],#sv[disabled]{opacity:.45;cursor:default}
+.log{min-height:3.4em;margin:0 0 14px;padding:10px 14px;background:var(--card);border:1px solid var(--bd);border-inline-start:4px solid var(--c);border-radius:8px;font-size:15px}
+.log b{color:var(--c);font-weight:600;margin-inline-end:6px;font-size:13px}
+.cx{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.cx div{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 4px;text-align:center;font-size:13px;color:var(--mu);line-height:1.5}
+.cx b{display:block;color:var(--tx);font:600 14px ui-monospace,Menlo,Consolas,monospace;direction:ltr}
+.nt{font-size:14px;color:var(--mu);margin:0 0 6px}
+.nt b{color:var(--tx);font-weight:600}
+.sec{margin-top:32px}
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--bd);white-space:nowrap}
+th{color:var(--mu);font-weight:500}
+td:first-child,th:first-child{text-align:start;font-weight:600;position:sticky;inset-inline-start:0;background:var(--card)}
+td{font-family:ui-monospace,Menlo,Consolas,monospace;direction:ltr}
+tr:last-child td{border-bottom:0}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--bd);text-align:center;color:var(--mu);font-size:14px}
+footer bdi{font-weight:600;color:var(--tx)}
+@media (prefers-reduced-motion:reduce){.cell,.sn circle{transition:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<h1>هياكل البيانات</h1>
+<p class="sub">اختر هيكلًا وجرّب عملياته لترى كيف يعمل خطوة بخطوة.</p>
+<div class="tabs" role="tablist" id="tabs" aria-label="هياكل البيانات"></div>
+<section id="pn">
+<h2 id="tt"></h2>
+<p class="sub" id="ds"></p>
+<div class="viz" id="vz" role="img" aria-label="تمثيل مرئي للهيكل"></div>
+<div class="ctl"><input id="iv" aria-label="القيمة"><select id="sv" aria-label="نقطة البداية" hidden></select><span id="ops"></span></div>
+<p class="log" id="lg" role="status" aria-live="polite"></p>
+<div class="cx" id="cx"></div>
+<p class="nt" id="cn"></p>
+<p class="nt" id="rw"></p>
+</section>
+<div class="sec"><h2>مقارنة سريعة</h2><p class="sub">تعقيد العمليات الأساسية في كل هيكل.</p><div class="tw"><table id="cmp"></table></div><p class="nt" style="margin-top:8px">* في المتوسط. في الرسم البياني: البحث يعني المرور الكامل، وV عدد الرؤوس وE عدد الحواف.</p></div>
+<footer>صنع بواسطة <bdi dir="ltr">cntic</bdi></footer>
+</main>
+<script>
+const $=i=>document.getElementById(i),cl=x=>JSON.parse(JSON.stringify(x));
+const D=window.DSD!==undefined?window.DSD:(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches?150:700);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const F=(s,h,m)=>({s:cl(s),h:h||{},m:m});
+const cls=(h,id)=>h.no&&h.no.includes(id)?"no":h.ok&&h.ok.includes(id)?"ok":h.on&&h.on.includes(id)?"on":"";
+const wrap=x=>'<div class="inn">'+x+'</div>';
+const NUM="أدخل رقمًا صحيحًا من 0 إلى 99.";
+function svg(W,H,N,E,h){
+const m={};N.forEach(n=>m[n.id]=n);
+return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="max-width:'+W+'px">'+E.map(e=>'<line x1="'+m[e[0]].x+'" y1="'+m[e[0]].y+'" x2="'+m[e[1]].x+'" y2="'+m[e[1]].y+'"/>').join("")+N.map(n=>'<g class="sn '+cls(h,n.id)+'"><circle cx="'+n.x+'" cy="'+n.y+'" r="17"/><text x="'+n.x+'" y="'+n.y+'" dy=".35em" text-anchor="middle">'+n.t+'</text></g>').join("")+'</svg>';
+}
+const cells=(s,h)=>s.map((v,i)=>'<span class="cell '+cls(h,i)+'">'+v+'<i>'+i+'</i></span>').join("");
+
+/* ---- مصفوفة ---- */
+const ARR={id:"array",n:"Array",a:"مصفوفة",c:"c0",inp:1,init:[4,8,15,16,23],
+d:"عناصر متتالية في الذاكرة، ولكل عنصر فهرس يبدأ من 0 فنصل إليه مباشرة.",
+rw:"مثال: درجات الطلاب، أو بكسلات صورة.",when:"متى تستخدمها: وصول سريع بالفهرس وحجم شبه ثابت.",
+cx:["O(1)","O(n)","O(n)","O(n)"],nt:"الإضافة والحذف في النهاية O(1)، وفي البداية أو الوسط O(n) بسبب الإزاحة.",
+r:(s,h)=>wrap('<div class="row">'+(s.length?cells(s,h):'<span class="empty">المصفوفة فارغة</span>')+'</div>'),
+ops:[
+{l:"push",f:(s,v)=>{if(s.length>=9)return[F(s,{},"الحد الأقصى 9 عناصر في هذا العرض.")];const t=[...s,v];return[F(t,{ok:[t.length-1]},"push("+v+"): أُضيف العنصر في نهاية المصفوفة مباشرة. O(1).")]}},
+{l:"unshift",f:(s,v)=>{if(s.length>=9)return[F(s,{},"الحد الأقصى 9 عناصر في هذا العرض.")];return[F(s,{on:s.map((_,i)=>i)},"لإدراج عنصر في البداية يجب إزاحة كل العناصر خطوة واحدة."),F([v,...s],{ok:[0]},"unshift("+v+"): بعد الإزاحة وُضع العنصر في الفهرس 0. O(n).")]}},
+{l:"pop",f:s=>{if(!s.length)return[F(s,{},"المصفوفة فارغة.")];const n=s.length-1;return[F(s,{no:[n]},"pop(): سيُحذف آخر عنصر ("+s[n]+")."),F(s.slice(0,n),{},"تم الحذف من النهاية. O(1).")]}},
+{l:"a[i]",f:(s,v)=>v>=s.length?[F(s,{},"الفهرس "+v+" خارج الحدود. الفهارس الصالحة من 0 إلى "+(s.length-1)+".")]:[F(s,{ok:[v]},"a["+v+"] = "+s[v]+". الوصول مباشر بالفهرس: O(1).")]},
+{l:"search",f:(s,v)=>{const fr=[];for(let i=0;i<s.length;i++){if(s[i]===v){fr.push(F(s,{ok:[i]},"وُجد "+v+" في الفهرس "+i+" بعد "+(i+1)+" مقارنة. O(n)."));return fr}fr.push(F(s,{on:[i]},"مقارنة a["+i+"] = "+s[i]+" مع "+v+": غير مطابق."))}fr.push(F(s,{},v+" غير موجود، فُحصت كل العناصر."));return fr}}]};
+
+/* ---- قائمة مترابطة ---- */
+const LL={id:"linked",n:"Linked List",a:"قائمة مترابطة",c:"c1",inp:1,init:[3,7,12],
+d:"سلسلة عقد، كل عقدة تحمل قيمة ومؤشرًا إلى العقدة التالية، ولا يلزم أن تكون متجاورة في الذاكرة.",
+rw:"مثال: سجل التنقل بين الصفحات، وقوائم التشغيل.",when:"متى تستخدمها: إدراج وحذف متكرران عند البداية دون إزاحة.",
+cx:["O(n)","O(n)","O(1)","O(1)"],nt:"الإدراج والحذف O(1) عند الرأس. الوصول إلى عقدة بعينها يتطلب المرور بما قبلها.",
+r:(s,h)=>wrap('<div class="row"><span class="tagp">HEAD</span><span class="ar">→</span>'+s.map((v,i)=>'<span class="cell '+cls(h,i)+'">'+v+'</span><span class="ar">→</span>').join("")+'<span class="nil">null</span></div>'),
+ops:[
+{l:"prepend",f:(s,v)=>s.length>=7?[F(s,{},"الحد الأقصى 7 عقد في هذا العرض.")]:[F(s,{},"إنشاء عقدة جديدة وربطها بالرأس الحالي."),F([v,...s],{ok:[0]},"prepend("+v+"): صارت العقدة الجديدة هي الرأس. O(1).")]},
+{l:"append",f:(s,v)=>{if(s.length>=7)return[F(s,{},"الحد الأقصى 7 عقد في هذا العرض.")];const fr=s.map((_,i)=>F(s,{on:[i]},"المرور على العقدة "+(i+1)+" للوصول إلى النهاية."));fr.push(F([...s,v],{ok:[s.length]},"append("+v+"): رُبطت آخر عقدة بالعقدة الجديدة. O(n) لأننا مررنا على القائمة."));return fr}},
+{l:"removeFirst",f:s=>s.length?[F(s,{no:[0]},"سيُحذف الرأس ("+s[0]+") بتحريك HEAD إلى العقدة التالية."),F(s.slice(1),{},"تم الحذف. O(1).")]:[F(s,{},"القائمة فارغة.")]},
+{l:"search",f:(s,v)=>{const fr=[];for(let i=0;i<s.length;i++){if(s[i]===v){fr.push(F(s,{ok:[i]},"وُجد "+v+" في العقدة "+(i+1)+". O(n)."));return fr}fr.push(F(s,{on:[i]},"العقدة "+(i+1)+" = "+s[i]+": غير مطابقة، ننتقل إلى التالية."))}fr.push(F(s,{},"وصلنا إلى null: "+v+" غير موجود."));return fr}}]};
+
+/* ---- كومة ---- */
+const STK={id:"stack",n:"Stack",a:"كومة",c:"c2",inp:1,init:[5,9,2],
+d:"آخر عنصر يدخل هو أول عنصر يخرج (LIFO)، والتعامل يكون من القمة فقط.",
+rw:"مثال: زر التراجع Undo، وسجل استدعاء الدوال.",when:"متى تستخدمها: العودة للخلف بترتيب عكسي.",
+cx:["O(n)","O(n)","O(1)","O(1)"],nt:"push وpop وpeek كلها O(1) لأنها تعمل عند القمة فقط.",
+r:(s,h)=>wrap('<div class="col">'+(s.length?"":'<span class="empty">الكومة فارغة</span>')+s.map((v,i)=>i).reverse().map(i=>'<div class="srow"><span class="cell wide '+cls(h,i)+'">'+s[i]+'</span>'+(i==s.length-1?'<span class="tagp">← top</span>':'')+'</div>').join("")+'<div class="base"></div></div>'),
+ops:[
+{l:"push",f:(s,v)=>s.length>=6?[F(s,{},"الكومة ممتلئة في هذا العرض (6).")]:[F([...s,v],{ok:[s.length]},"push("+v+"): وُضع فوق القمة. O(1).")]},
+{l:"pop",f:s=>s.length?[F(s,{no:[s.length-1]},"pop(): يخرج العنصر الأعلى ("+s[s.length-1]+") أولًا لأنه آخر من دخل."),F(s.slice(0,-1),{},"صار العنصر الذي تحته هو القمة. O(1).")]:[F(s,{},"الكومة فارغة، لا يوجد ما يُحذف.")]},
+{l:"peek",f:s=>s.length?[F(s,{on:[s.length-1]},"peek(): قراءة القمة ("+s[s.length-1]+") دون حذفها. O(1).")]:[F(s,{},"الكومة فارغة.")]}]};
+
+/* ---- طابور ---- */
+const QUE={id:"queue",n:"Queue",a:"طابور",c:"c3",inp:1,init:[6,2,9],
+d:"أول عنصر يدخل هو أول عنصر يخرج (FIFO): الإضافة من المؤخرة والحذف من المقدمة.",
+rw:"مثال: طابور الطباعة، وانتظار المهام.",when:"متى تستخدمه: معالجة الطلبات بحسب ترتيب وصولها.",
+cx:["O(n)","O(n)","O(1)","O(1)"],nt:"enqueue وdequeue وpeek كلها O(1) عند التنفيذ الصحيح.",
+r:(s,h)=>wrap('<div class="row">'+(s.length?s.map((v,i)=>'<span class="cell '+cls(h,i)+'">'+v+((i==0||i==s.length-1)?'<em>'+(s.length==1?"front/rear":i==0?"front":"rear")+'</em>':'')+'</span>'+(i<s.length-1?'<span class="ar">→</span>':'')).join(""):'<span class="empty">الطابور فارغ</span>')+'</div>'),
+ops:[
+{l:"enqueue",f:(s,v)=>s.length>=7?[F(s,{},"الطابور ممتلئ في هذا العرض (7).")]:[F([...s,v],{ok:[s.length]},"enqueue("+v+"): انضم إلى مؤخرة الطابور. O(1).")]},
+{l:"dequeue",f:s=>s.length?[F(s,{no:[0]},"dequeue(): يخرج الأقدم ("+s[0]+") لأنه أول من وصل."),F(s.slice(1),{},"أصبح التالي هو المقدمة. O(1).")]:[F(s,{},"الطابور فارغ.")]},
+{l:"peek",f:s=>s.length?[F(s,{on:[0]},"peek(): قراءة المقدمة ("+s[0]+") دون حذف.")]:[F(s,{},"الطابور فارغ.")]}]};
+
+/* ---- جدول تجزئة ---- */
+const HS=k=>{let s=0;for(const c of k)s+=c.charCodeAt(0);return[s,s%7]};
+const HT={id:"hash",n:"Hash Table",a:"جدول تجزئة",c:"c0",inp:2,init:[[],[],["ali"],["sara"],["omar"],["noor","dana"],[]],
+d:"دالة تجزئة تحوّل المفتاح إلى رقم خانة، فنصل إلى مكانه مباشرة دون البحث في كل العناصر.",
+rw:"مثال: القواميس (dictionary) وتخزين الجلسات.",when:"متى تستخدمه: بحث وإدراج سريعان بالمفتاح. التصادم يُحل بسلسلة داخل الخانة.",
+cx:["—","O(1)*","O(1)*","O(1)*"],nt:"دالة التجزئة هنا: مجموع أكواد الحروف mod 7. في المتوسط O(1)، وتزيد عند كثرة التصادمات.",
+r:(s,h)=>wrap(s.map((b,n)=>'<div class="hr"><span class="cell hid '+cls(h,"b"+n)+'">'+n+'</span><span class="ar">→</span>'+b.map((k,j)=>'<span class="cell '+cls(h,"c"+n+"-"+j)+'">'+k+'</span><span class="ar">→</span>').join("")+'<span class="nil">null</span></div>').join("")),
+ops:[
+{l:"insert",f:(s,k)=>{const[sum,b]=HS(k),fr=[F(s,{on:["b"+b]},'hash("'+k+'") = '+sum+' mod 7 = '+b+'.')];if(s[b].includes(k)){fr.push(F(s,{ok:["c"+b+"-"+s[b].indexOf(k)]},"المفتاح موجود مسبقًا في الخانة "+b+"."));return fr}if(s.flat().length>=12)return[F(s,{},"الحد الأقصى 12 مفتاحًا في هذا العرض.")];const t=cl(s);t[b].push(k);fr.push(F(t,{ok:["c"+b+"-"+(t[b].length-1)]},t[b].length>1?"تصادم! الخانة "+b+" مشغولة، فيُضاف المفتاح إلى سلسلتها.":"الخانة "+b+" فارغة، يُخزَّن المفتاح مباشرة. O(1)."));return fr}},
+{l:"search",f:(s,k)=>{const[sum,b]=HS(k),fr=[F(s,{on:["b"+b]},'hash("'+k+'") = '+sum+' mod 7 = '+b+'. نذهب مباشرة إلى الخانة.')];if(!s[b].length){fr.push(F(s,{},"الخانة فارغة: المفتاح غير موجود."));return fr}for(let j=0;j<s[b].length;j++){if(s[b][j]===k){fr.push(F(s,{ok:["c"+b+"-"+j]},"وُجد المفتاح. O(1) في المتوسط."));return fr}fr.push(F(s,{on:["c"+b+"-"+j]},"فحص "+s[b][j]+" في السلسلة: غير مطابق."))}fr.push(F(s,{},"انتهت السلسلة: المفتاح غير موجود."));return fr}},
+{l:"delete",f:(s,k)=>{const[sum,b]=HS(k),j=s[b].indexOf(k),fr=[F(s,{on:["b"+b]},'hash("'+k+'") = '+sum+' mod 7 = '+b+'.')];if(j<0){fr.push(F(s,{},"المفتاح غير موجود في الخانة "+b+"."));return fr}fr.push(F(s,{no:["c"+b+"-"+j]},"وُجد المفتاح وسيُحذف من السلسلة."));const t=cl(s);t[b].splice(j,1);fr.push(F(t,{on:["b"+b]},"تم الحذف."));return fr}}]};
+
+/* ---- شجرة بحث ثنائية ---- */
+const cnt=n=>n?1+cnt(n.l)+cnt(n.r):0;
+function bl(t,h){
+if(!t)return wrap('<span class="empty">الشجرة فارغة</span>');
+const N=[],E=[];let k=0,md=0;
+(function f(n,d,p){if(!n)return;f(n.l,d+1,n);md=Math.max(md,d);N.push({id:n.v,t:n.v,i:k++,d:d});if(p)E.push([p.v,n.v]);f(n.r,d+1,n)})(t,0,null);
+const g=Math.min(46,300/Math.max(N.length-1,1)),x0=180-(N.length-1)*g/2;
+N.forEach(n=>{n.x=x0+n.i*g;n.y=26+n.d*54});
+return wrap(svg(360,26+md*54+26,N,E,h));
+}
+function bpath(s,v,fr){let n=s;while(n){if(v===n.v)return n;fr.push(F(s,{on:[n.v]},v+(v<n.v?" < ":" > ")+n.v+": نبحث في الجهة "+(v<n.v?"اليسرى":"اليمنى")+"."));n=v<n.v?n.l:n.r}return null}
+const BST={id:"bst",n:"Binary Search Tree",a:"شجرة بحث",c:"c1",inp:1,init:{v:50,l:{v:30,l:{v:20,l:null,r:null},r:{v:40,l:null,r:null}},r:{v:70,l:{v:60,l:null,r:null},r:{v:80,l:null,r:null}}},
+d:"شجرة لكل عقدة فيها ابن أيسر أصغر منها وابن أيمن أكبر، فكل مقارنة تستبعد نصف الشجرة تقريبًا.",
+rw:"مثال: فهرسة قواعد البيانات، وحفظ البيانات مرتبة.",when:"متى تستخدمها: بحث وإدراج متكرران على بيانات مرتبة.",
+cx:["—","O(log n)*","O(log n)*","O(log n)*"],nt:"* إذا كانت الشجرة متوازنة. إدراج قيم مرتبة يجعلها خطًا فتصبح العمليات O(n).",
+r:bl,
+ops:[
+{l:"insert",f:(s,v)=>{if(!s)return[F({v:v,l:null,r:null},{ok:[v]},"الشجرة فارغة: "+v+" يصبح الجذر.")];if(cnt(s)>=12)return[F(s,{},"الحد الأقصى 12 عقدة في هذا العرض.")];const fr=[],t=cl(s);let n=t,d=0;while(1){if(v===n.v){fr.push(F(t,{ok:[v]},v+" موجود مسبقًا، لا تكرار."));return fr}const dir=v<n.v?"l":"r";fr.push(F(t,{on:[n.v]},v+(v<n.v?" < ":" > ")+n.v+": نذهب "+(v<n.v?"يسارًا":"يمينًا")+"."));if(!n[dir]){if(d>=4){fr.push(F(t,{},"تجاوز عمق العرض (5 مستويات)."));return fr}n[dir]={v:v,l:null,r:null};fr.push(F(t,{ok:[v]},"مكان فارغ: أُدرجت "+v+" هنا. O(log n) في المتوسط."));return fr}n=n[dir];d++}}},
+{l:"search",f:(s,v)=>{if(!s)return[F(s,{},"الشجرة فارغة.")];const fr=[],n=bpath(s,v,fr);fr.push(n?F(s,{ok:[v]},"وُجد "+v+"! عدد المقارنات صغير لأننا نستبعد نصف الشجرة كل مرة."):F(s,{},"وصلنا إلى null: "+v+" غير موجود."));return fr}},
+{l:"delete",f:(s,v)=>{if(!s)return[F(s,{},"الشجرة فارغة.")];const fr=[],found=bpath(s,v,fr);if(!found){fr.push(F(s,{},"وصلنا إلى null: "+v+" غير موجود."));return fr}fr.push(F(s,{no:[v]},"وُجد "+v+" وسيُحذف."));let t=cl(s),p=null,n=t;while(n.v!==v){p=n;n=v<n.v?n.l:n.r}const rep=c=>{if(!p)t=c;else if(p.l===n)p.l=c;else p.r=c};if(!n.l||!n.r){rep(n.l||n.r);fr.push(F(t,{},n.l||n.r?"له ابن واحد: يحلّ الابن مكانه.":"عقدة طرفية: تُحذف مباشرة."));return fr}let sp=n,sc=n.r;while(sc.l){sp=sc;sc=sc.l}fr.push(F(s,{no:[v],ok:[sc.v]},"له ابنان: نستبدله بخليفته (أصغر قيمة في الجهة اليمنى) = "+sc.v+"."));n.v=sc.v;if(sp===n)sp.r=sc.r;else sp.l=sc.r;fr.push(F(t,{ok:[n.v]},"تم الحذف مع الحفاظ على الترتيب."));return fr}},
+{l:"inorder",f:s=>{if(!s)return[F(s,{},"الشجرة فارغة.")];const o=[];(function f(n){if(!n)return;f(n.l);o.push(n.v);f(n.r)})(s);const fr=o.map((v,i)=>F(s,{ok:o.slice(0,i),on:[v]},"المرور المتوسط (يسار، جذر، يمين): "+o.slice(0,i+1).join(" ، ")));fr.push(F(s,{ok:o},"القيم خرجت مرتبة تصاعديًا: "+o.join(" ، ")));return fr}}]};
+
+/* ---- كومة أولوية ---- */
+function hl(a,h){
+const N=[],E=[];let md=0;
+a.forEach((v,i)=>{const L=Math.floor(Math.log2(i+1)),p=i-(Math.pow(2,L)-1);md=Math.max(md,L);N.push({id:i,t:v,x:(p+.5)/Math.pow(2,L)*360,y:26+L*54});if(i)E.push([(i-1)>>1,i])});
+return wrap((a.length?svg(360,26+md*54+26,N,E,h)+'<div class="row" style="justify-content:center">'+cells(a,h)+'</div>':'<span class="empty">الكومة فارغة</span>'));
+}
+const HP={id:"heap",n:"Min Heap",a:"كومة أولوية",c:"c2",inp:1,init:[3,5,8,9,10,12],
+d:"شجرة كاملة يكون فيها الأب دائمًا أصغر من أبنائه، فالجذر هو أصغر قيمة. تُخزَّن في مصفوفة: ابنا العنصر i هما 2i+1 و2i+2.",
+rw:"مثال: قوائم الأولوية، وجدولة المهام.",when:"متى تستخدمها: الحصول على الأصغر (أو الأكبر) بسرعة بشكل متكرر.",
+cx:["O(1)","O(n)","O(log n)","O(log n)"],nt:"الوصول يعني قراءة الأصغر O(1). الحذف يعني استخراج الأصغر O(log n).",
+r:hl,
+ops:[
+{l:"insert",f:(s,v)=>{if(s.length>=15)return[F(s,{},"الحد الأقصى 15 عنصرًا في هذا العرض.")];const t=[...s,v],fr=[];let i=t.length-1;fr.push(F(t,{ok:[i]},"نضع "+v+" في أول موضع فارغ في آخر الشجرة."));while(i>0){const p=(i-1)>>1;if(t[p]>t[i]){fr.push(F(t,{on:[i,p]},"الأب "+t[p]+" أكبر من الابن "+t[i]+": نبدّل."));[t[p],t[i]]=[t[i],t[p]];fr.push(F(t,{ok:[p]},"بعد التبديل صعد "+t[p]+" خطوة."));i=p}else{fr.push(F(t,{ok:[i]},"الأب "+t[p]+" ≤ "+t[i]+": الترتيب سليم. O(log n)."));return fr}}fr.push(F(t,{ok:[0]},"وصل إلى الجذر. O(log n)."));return fr}},
+{l:"extractMin",f:s=>{if(!s.length)return[F(s,{},"الكومة فارغة.")];const fr=[F(s,{no:[0]},"الأصغر هو الجذر ("+s[0]+") وسيُستخرج.")],t=[...s];if(t.length==1){fr.push(F([],{},"استُخرج الجذر وأصبحت الكومة فارغة."));return fr}t[0]=t.pop();fr.push(F(t,{on:[0]},"ننقل آخر عنصر ("+t[0]+") إلى الجذر ثم نُنزله إلى مكانه."));let i=0;while(1){const l=2*i+1,r=l+1;let m=i;if(l<t.length&&t[l]<t[m])m=l;if(r<t.length&&t[r]<t[m])m=r;if(m===i){fr.push(F(t,{ok:[i]},"لا يوجد ابن أصغر منه: الترتيب سليم. O(log n)."));return fr}fr.push(F(t,{on:[i,m]},"الابن "+t[m]+" أصغر من "+t[i]+": نبدّل."));[t[i],t[m]]=[t[m],t[i]];fr.push(F(t,{ok:[m]},"نزل العنصر إلى الأسفل."));i=m}}}]};
+
+/* ---- رسم بياني ---- */
+const GN=[["A",60,60],["B",180,30],["C",300,60],["D",60,170],["E",180,200],["F",300,170]],GE=[["A","B"],["B","C"],["A","D"],["B","E"],["C","F"],["D","E"],["E","F"]];
+const adj=n=>GE.filter(e=>e.includes(n)).map(e=>e[0]===n?e[1]:e[0]).sort();
+const GR={id:"graph",n:"Graph",a:"رسم بياني",c:"c3",inp:3,init:null,
+d:"رؤوس تربطها حواف، وتمثّل علاقات متشابكة. هنا يُخزَّن بقوائم الجيران، ونجرّب طريقتين للمرور.",
+rw:"مثال: الخرائط، وشبكات التواصل.",when:"متى تستخدمه: علاقات وروابط بين الأشياء، والبحث عن مسارات. BFS يمرّ طبقة بطبقة وDFS ينزل بعمق.",
+cx:["—","O(V+E)","O(1)","O(V+E)"],nt:"المرور الكامل O(V+E). إضافة رأس أو حافة O(1) بقوائم الجيران.",
+r:(s,h)=>wrap(svg(360,230,GN.map(n=>({id:n[0],t:n[0],x:n[1],y:n[2]})),GE,h)),
+ops:[
+{l:"BFS",f:(s,st)=>{const q=[st],seen=[st],out=[],fr=[];while(q.length){const c=q.shift();out.push(c);const nb=adj(c).filter(x=>!seen.includes(x));seen.push(...nb);q.push(...nb);fr.push(F(null,{ok:out.slice(0,-1),on:[c]},"BFS: زرنا "+c+(nb.length?"، وأضفنا جيرانه الجدد "+nb.join(" ، ")+" إلى الطابور.":"، ولا جيران جدد.")+" الطابور: ["+q.join(" ، ")+"]"))}fr.push(F(null,{ok:out},"ترتيب الزيارة: "+out.join(" ← ")+" (طبقة بطبقة)."));return fr}},
+{l:"DFS",f:(s,st)=>{const seen=[],fr=[];(function go(n,path){seen.push(n);fr.push(F(null,{ok:seen.slice(0,-1),on:[n]},"DFS: ننزل إلى "+n+". المسار: "+path.concat(n).join(" ← ")));adj(n).forEach(x=>{if(!seen.includes(x)){go(x,path.concat(n))}})})(st,[]);fr.push(F(null,{ok:seen},"ترتيب الزيارة: "+seen.join(" ← ")+" (نزول بعمق ثم رجوع)."));return fr}}]};
+
+const DS=[ARR,LL,STK,QUE,HT,BST,HP,GR],ST={};
+DS.forEach(d=>ST[d.id]=cl(d.init));
+let cur=DS[0],busy=false;
+const say=(m,k,n)=>{$("lg").innerHTML=(n>1?"<b>خطوة "+k+" من "+n+"</b>":"")+m};
+function lock(b){document.querySelectorAll(".op,#iv,#sv").forEach(e=>e.disabled=b)}
+function draw(s,h){$("vz").innerHTML=cur.r(s,h||{})}
+async function play(fr){busy=true;lock(true);for(let k=0;k<fr.length;k++){draw(fr[k].s,fr[k].h);say(fr[k].m,k+1,fr.length);if(k<fr.length-1)await sleep(D)}ST[cur.id]=cl(fr[fr.length-1].s);busy=false;lock(false)}
+function pick(d){
+cur=d;
+document.querySelectorAll(".tb").forEach(b=>b.setAttribute("aria-selected",b.dataset.id===d.id));
+$("pn").style.setProperty("--c","var(--"+d.c+")");
+$("tt").innerHTML=d.a+' <span dir="ltr" style="color:var(--mu);font-weight:400;font-size:16px">'+d.n+'</span>';
+$("ds").textContent=d.d;
+$("iv").hidden=d.inp==3;$("sv").hidden=d.inp!=3;
+$("iv").value="";$("iv").placeholder=d.inp==2?"key (a-z, 0-9)":"0–99";
+$("iv").inputMode=d.inp==2?"text":"numeric";$("iv").maxLength=d.inp==2?8:2;
+if(d.inp==3)$("sv").innerHTML=GN.map(n=>'<option value="'+n[0]+'">البداية: '+n[0]+'</option>').join("");
+$("ops").innerHTML=d.ops.map((o,i)=>'<button class="op" data-i="'+i+'">'+o.l+'</button>').join(" ");
+$("cx").innerHTML=["الوصول","البحث","الإدراج","الحذف"].map((l,i)=>'<div>'+l+'<b>'+d.cx[i]+'</b></div>').join("");
+$("cn").innerHTML="<b>التعقيد:</b> "+d.nt;
+$("rw").innerHTML="<b>مثال واقعي:</b> "+d.rw.replace("مثال: ","")+"<br>"+d.when;
+draw(ST[d.id],{});
+$("lg").textContent="جرّب إحدى العمليات في الأعلى.";
+}
+function exec(i){
+if(busy)return;
+const o=cur.ops[i];let v;
+if(cur.inp==1){v=parseInt($("iv").value,10);if(o.l!=="pop"&&o.l!=="dequeue"&&o.l!=="peek"&&o.l!=="removeFirst"&&o.l!=="inorder"&&o.l!=="extractMin"&&!(v>=0&&v<=99)){say(NUM);$("iv").focus();return}}
+if(cur.inp==2){v=$("iv").value.trim().toLowerCase();if(!/^[a-z0-9]{1,8}$/.test(v)){say("أدخل مفتاحًا من حروف إنجليزية أو أرقام (حتى 8 خانات).");$("iv").focus();return}}
+if(cur.inp==3)v=$("sv").value;
+play(o.f(cl(ST[cur.id]),v));
+}
+$("ops").onclick=e=>{const b=e.target.closest(".op");if(b&&!b.disabled)exec(+b.dataset.i)};
+$("iv").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();exec(0)}};
+$("tabs").innerHTML=DS.map(d=>'<button class="tb" role="tab" data-id="'+d.id+'" style="--c:var(--'+d.c+')"><b>'+d.n+'</b><small>'+d.a+'</small></button>').join("");
+$("tabs").onclick=e=>{const b=e.target.closest(".tb");if(!b||busy)return;pick(DS.find(d=>d.id===b.dataset.id))};
+$("cmp").innerHTML='<tr><th>الهيكل</th><th>الوصول</th><th>البحث</th><th>الإدراج</th><th>الحذف</th></tr>'+DS.map(d=>'<tr><td>'+d.a+'</td>'+d.cx.map(c=>'<td>'+c+'</td>').join("")+'</tr>').join("");
+pick(ARR);
+</script>
+</body>
+</html>
